@@ -1,61 +1,222 @@
 {% extends 'base.html' %}
 
 {% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
 {% endblock %}
 
 {% block body %}
-<h1>Baybayin Letter Classifier</h1>
-<h5> Hello, User {{ session.uid }}</h5>
-<form method="POST" action="/cnn" name="CNN_params">
-    CNN Parameters
-    <div class="row">
-        filters: <input type="number" name="filters" value={{session.cnn_params.filters}}>
+<div class='section'>
+    <div class="drawing-board">
+        <h2>Drawing Board</h2>
     </div>
-    <div class="row">
-        kernel: 
-        <input type="number" name="kernel_x" value={{session.cnn_params.kernel_x}}>
-        <input type="number" name="kernel_y" value={{session.cnn_params.kernel_y}}>
-    </div>
-    <div class="row">
-        strides: 
-        <input type="number" name="stride_x" value={{session.cnn_params.stride_x}}> 
-        <input type="number" name="stride_y" value={{session.cnn_params.stride_y}}>
-    </div>
-    <div class="row">
-        padding: <input type="number" name="padding" value={{session.cnn_params.padding}}>
-    </div>
-    <div class="row">
-        pool_size: 
-        <input type="number" name="pool_x" value={{session.cnn_params.pool_x}}> 
-        <input type="number" name="pool_y" value={{session.cnn_params.pool_y}}>
-    </div>
-    <div class="row">
-        batch_norm: <input type="number" name="batch_norm" value={{session.cnn_params.batch_norm}}>
-    </div>
-    <input type="submit">
-</form>
+    <div class="drawing-content">
+        <div class="drawing-canvas-background">
+            <div class="drawing-canvas"></div>
+        </div>
+        <div class="drawing-rows">
+            <div class="row">
+                <h3 class="drawing-label">Prediction: </h3>
+                <h3 class="drawing-output">A</h3>
+            </div>
+            <div class="row">
+                <h3 class="drawing-label">Probability: </h3>
+                <h3 class="drawing-output">0%</h3>
+            </div>
+            <div>
+                <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                </p>
+            </div>
+        </div>
 
-<form method="POST" action="/train" name="training_params">
-    Training Parameters
-    <div class="row">
-        directory: <input type="number" name="directory" value={{session.train_params.directory}}>
     </div>
-    <div class="row">
-        learning_rate:  <input type="number" name="learning_rate" value={{session.train_params.learning_rate}}>
+
+    <button class="drawing-button">Clear</button>
+    <button class="drawing-button">Submit</button>
+
+    <div>
+        {% if session.classification and session.probability%}
+        <p>Prediction: {{ session.classification }}<br>
+        Probability: {{ session.probability }}%</p>
+        {% endif %}
+        <form method="POST" action="classify" name="classify" enctype="multipart/form-data">
+            <div class="label-div">
+                <h3 class="drawing-label">Classify Image</h3>
+            </div>
+            <input type="file" name="drawing" id="drawing">
+            <input type="submit">
+        </form>
     </div>
-    <div class="row">
-        batch_size:  <input type="number" name="batch_size" value={{session.train_params.batch_size}}>
+
+</div>
+
+<div class='section'>
+    <div class="drawing-board">
+        <h2>Convolutional Neural Networks</h2>
     </div>
-    <div class="row">
-        epochs: <input type="number" name="epochs" value={{session.train_params.epochs}}>
+    <form method="POST" action="{{ url_for('cnn') }}">
+        <div>
+            <h3>What are Convolutional Layers?</h3>
+        </div>
+        <div>
+            <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.”</p>
+        </div>
+        <div class="input-fields">
+            <div>
+                <div class='row'>
+                    <h3 class="drawing-label">Convolutions:</h3> 
+                    <button>1</button> 
+                    <button>2</button> 
+                    <button>3</button>
+                    <button>4</button>
+                </div>
+                
+                <div class='row'>
+                    <h3 class="drawing-label">Filters:</h3>
+                    <input type="number" min="0" name="filters" value={{session.cnn_params.filters}}>
+                </div>
+
+                <div class='row'>
+                    <h3 class="drawing-label">Kernel:</h3>
+                    <input type="number" min="0" name="kernel_x" value={{session.cnn_params.kernel_x}}>
+                    <input type="number" min="0" name="kernel_y" value={{session.cnn_params.kernel_y}}>
+                </div>
+
+                <div class='row'>
+                    <h3 class="drawing-label">Strides:</h3>
+                    <input type="number" min="0" name="stride_x" value={{session.cnn_params.stride_x}}> 
+                    <input type="number" min="0" name="stride_y" value={{session.cnn_params.stride_y}}>
+                </div>
+            </div>
+            <div>
+                <div class='row'>
+                    <h3 class="drawing-label">On:</h3>
+                    <button>X</button>
+                </div>
+                
+                <div class='row'>
+                    <h3 class="drawing-label">Padding:</h3>
+                    <select name="padding" selected={{session.cnn_params.padding}}>
+                        <option>valid</option>
+                        <option>same</option>
+                    </select>
+                </div>
+
+                <div class='row'>
+                    <h3 class="drawing-label">Pool Size:</h3>
+                    <input type="number" min="0" name="pool_x" value={{session.cnn_params.pool_x}}> 
+                    <input type="number" min="0" name="pool_y" value={{session.cnn_params.pool_y}}>
+                </div>
+                
+                <div class='row'>
+                    <h3 class="drawing-label">Batch Norm:</h3>
+                    <button>X</button>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3>What are Fully Connected Layers?</h3>
+        </div>
+        <div>
+            <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.”</p>
+        </div>
+
+        <div class="input-fields">
+            <div>
+                <div class="row">
+                    <h3 class="drawing-label">Fully Connected Layers:</h3>
+                    <button>1</button> 
+                    <button>2</button> 
+                    <button>3</button>
+                    <button>4</button>
+                    
+                </div>
+                <div class="row">
+                    <h3 class="drawing-label">Output Size:</h3>
+                    <input type="number" min="0" name="output_size" value={{session.cnn_params.output_size}}>
+                </div>
+                <div class="row">
+                    <h3 class="drawing-label">Dropout:</h3>
+                    <input type="number" min="0" step="0.01" name="dropout" value={{session.cnn_params.dropout}}>
+                </div>
+                <div class="row">
+                    <h3 class="drawing-label">Activation Function:</h3>
+                    <select name="activation">
+                        <option>sigmoid</option>
+                        <option>tanh</option>
+                        <option>ReLu</option>
+                    </select>
+                </div>
+                <div class="row">
+                    <h3 class="drawing-label">On:</h3>
+                    <button>X</button>
+                </div>
+            </div>
+
+        </div>
+
+    <input type='submit' value="Train CNN" class='form-submit'>
+    </form>
+</div>
+
+
+<div class='section'>
+    <div class="drawing-board">
+        <h2>Retrain Model</h2>
     </div>
-    <div class="row">
-        momentum: 
-        <input type="number" name="momentum" value={{session.train_params.momentum}}>
-    </div>
-    <div class="row">
-        optimizer: <input type="number" name="optimizer" value={{session.train_params.optimizer}}>
-    </div>
-    <input type="submit">
-</form>
+    <form method="POST" action="{{ url_for('train')}}">
+        <div>
+            <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.”</p>
+        </div>
+
+        <div class="input-fields">
+            <div>
+                <div class='row'>
+                    <h3 class="drawing-label">Convolutions:</h3> 
+                    <button>1</button> 
+                    <button>2</button> 
+                    <button>3</button>
+                    <button>4</button>
+                </div>
+                
+                <div class='row'>
+                    <h3 class="drawing-label">Optimizer:</h3>
+                    <select name="optimizer" selected={{session.train_params.optimizer}}>
+                        <option>SGD</option>
+                        <option>Adam</option>
+                        <option>Nadam</option>
+                        <option>RMSProp</option>
+                    </select>
+                </div>
+
+                <div class='row'>
+                    <h3 class="drawing-label">Learning Rate:</h3>
+                    <input type="number" min="0" step="0.01" name="learning_rate" value={{session.train_params.learning_rate}}>
+                </div>
+
+                <div class='row'>
+                    <h3 class="drawing-label">Beta 1:</h3>
+                    <input type="number" min="0" step="0.01" name="beta1" value={{session.train_params.beta1}}>
+                </div>
+
+                <div class='row'>
+                    <h3 class="drawing-label">Beta 2:</h3>
+                    <input type="number" min="0" step="0.01" name="beta2" value={{session.train_params.beta2}}>
+                </div>
+
+                <div class='row'>
+                    <h3 class="drawing-label">Batch Size:</h3>
+                    <input type="number" min="0" step="0.01" name="batch_size" value={{session.train_params.batch_size}}>
+                </div>
+
+                <div class='row'>
+                    <h3 class="drawing-label">Epochs:</h3>
+                    <input type="number" min="0" name="epochs" value={{session.train_params.epochs}}>
+                </div>
+            </div>
+        </div>
+        <input type='submit' value="Train Model" class='form-submit'>
+    </form>
+</div>
 {% endblock %}

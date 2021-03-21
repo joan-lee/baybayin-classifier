@@ -1,0 +1,132 @@
+.header{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 95vh;
+}
+
+.drawing-board {
+    margin-top: 20px;
+}
+
+.drawing-canvas-background{
+    background-color: #1E3C3F;
+    width: 96vw;
+    height: 24vh;
+    padding: 20px;
+}
+
+.drawing-canvas{
+    background-color: #C4C4C4;
+    width:100%;
+    height:100%;
+}
+
+.drawing-label{
+    background: #1E3C3F;
+    padding:10px;
+    margin-right: 10px;
+}
+
+.drawing-output{
+    background: #E1A46D;
+    padding:10px;
+    margin-left: 10px;
+}
+
+.drawing-button{
+    margin-top: 10px;
+    margin-right: 10px;
+    background: #1E3C3F;
+    color: #fff;
+    font-size: 24px;
+    font-family: 'Mulish', sans-serif;
+}
+
+.drawing-content{
+    display: flex;
+    flex-direction:row;
+}
+
+.drawing-rows{
+    flex-direction: row;
+    margin-left: 10px;
+}
+
+.row {
+    width: 900px;
+}
+
+.row:after {
+content: "";
+display: table;
+clear: both;
+}
+  
+.column {
+display: inline-block;
+width: 50%;
+}
+
+.label-div{
+    display: flex;
+    flex-direction: column;
+    display:inline-block;
+    height:fit-content;
+}
+
+.section {
+    flex: none;
+    order: 2;
+    flex-grow: 0;
+    margin: 120px 0px;
+}
+
+.form-button {
+    margin-top: 10px;
+    margin-right: 10px;
+    background: #E5E5E5;
+    font-size: 32px;
+    font-family: 'Mulish', sans-serif;
+}
+
+form {
+    background: None;
+    width: 100%;
+    padding: 0px;
+}
+
+.input-fields {
+    display: flex;
+    flex-direction:row;
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+h3 {
+    display:inline-block;
+}
+
+.form-submit {
+    width: 100%;
+    margin-top: 10px;
+    margin-right: 10px;
+    background: #1E3C3F;
+    font-size: 24px;
+    color: #fff;
+    font-family: 'Mulish', sans-serif;
+}
+
+input#drawing {
+    width: fit-content;
+}
+
+input, button, select {
+    font-size: 18px;
+    font-family: 'Mulish', sans-serif;
+}
+
+.input-fields button {
+    height: 50px;
+    width: 50px;
+}
